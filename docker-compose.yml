@@ -37,5 +37,17 @@ services:
     ports:
       - "6379:6379"
 
+  ml_worker:
+    build:
+      context: ./ml_worker
+    depends_on:
+      - kafka
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - BACKEND_URL=http://host.docker.internal:3001/api/simulate-sensor
+    # If using host networking to reach the backend that isn't in docker:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
 volumes:
   postgres_data:
